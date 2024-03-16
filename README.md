@@ -1,5 +1,5 @@
 # Edwards---Exocitosis-event-detection
-
+This is a working version of the repo being used for writing the manuscript -- Shatavisha Dasgupta
 Image analysis pipeline to detect exocytosis (vesicle fusion at plasma membrane) 
 on TIRF microscopy timelapse images
 
