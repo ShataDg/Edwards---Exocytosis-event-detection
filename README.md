@@ -1,4 +1,4 @@
-# Edwards---Exocitosis-event-detection
+# Edwards---Exocytosis-event-detection
 
 ### This is a working version of the repo being used for writing the manuscript -- Shatavisha Dasgupta
 
