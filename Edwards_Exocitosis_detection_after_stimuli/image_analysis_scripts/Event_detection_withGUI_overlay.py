@@ -10,7 +10,8 @@ from ij.plugin.frame import RoiManager
 
 from fiji.plugin.trackmate import Model, Settings, TrackMate, SelectionModel, Logger, Spot, SpotCollection
 from fiji.plugin.trackmate.detection import LogDetectorFactory
-from fiji.plugin.trackmate.tracking.sparselap import SimpleSparseLAPTrackerFactory
+#updated code
+from fiji.plugin.trackmate.tracking.jaqaman import SimpleSparseLAPTrackerFactory
 from fiji.plugin.trackmate.tracking import LAPUtils
 from fiji.plugin.trackmate.action import ExportAllSpotsStatsAction, LabelImgExporter, CaptureOverlayAction
 from fiji.plugin.trackmate.gui.displaysettings import DisplaySettings, DisplaySettingsIO
