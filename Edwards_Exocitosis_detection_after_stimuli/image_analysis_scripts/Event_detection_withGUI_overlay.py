@@ -12,7 +12,8 @@ from fiji.plugin.trackmate import Model, Settings, TrackMate, SelectionModel, Lo
 from fiji.plugin.trackmate.detection import LogDetectorFactory
 #updated code
 from fiji.plugin.trackmate.tracking.jaqaman import SimpleSparseLAPTrackerFactory
-from fiji.plugin.trackmate.tracking import LAPUtils
+#updated code
+from fiji.plugin.trackmate.tracking.LAPUtils import LAPUtils
 from fiji.plugin.trackmate.action import ExportAllSpotsStatsAction, LabelImgExporter, CaptureOverlayAction
 from fiji.plugin.trackmate.gui.displaysettings import DisplaySettings, DisplaySettingsIO
 import fiji.plugin.trackmate.visualization.hyperstack.HyperStackDisplayer as HyperStackDisplayer
