@@ -7,14 +7,14 @@ from ij.gui import WaitForUserDialog, GenericDialog
 from ij.plugin import ImageCalculator, PlugIn
 from ij.measure import Measurements, ResultsTable
 from ij.plugin.frame import RoiManager
-from fiji.plugin.trackmate.tracking import LAPUtils
+#from fiji.plugin.trackmate.tracking.LAPUtils import LAPUtils
 
 from fiji.plugin.trackmate import Model, Settings, TrackMate, SelectionModel, Logger, Spot, SpotCollection
 from fiji.plugin.trackmate.detection import LogDetectorFactory
 #updated code
 from fiji.plugin.trackmate.tracking.jaqaman import SimpleSparseLAPTrackerFactory
 #updated code
-from fiji.plugin.trackmate.tracking.LAPUtils import LAPUtils
+#from fiji.plugin.trackmate.tracking.LAPUtils import LAPUtils
 from fiji.plugin.trackmate.action import ExportAllSpotsStatsAction, LabelImgExporter, CaptureOverlayAction
 from fiji.plugin.trackmate.gui.displaysettings import DisplaySettings, DisplaySettingsIO
 import fiji.plugin.trackmate.visualization.hyperstack.HyperStackDisplayer as HyperStackDisplayer
@@ -116,7 +116,7 @@ for eachobj in movies:
 			}
 	
 		settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-		settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+		settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 		settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 		settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 		settings.trackerSettings['MAX_FRAME_GAP'] = 0
@@ -235,7 +235,7 @@ for eachobj in movies:
 				}
 		
 			settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-			settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+			settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 			settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 			settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 			settings.trackerSettings['MAX_FRAME_GAP'] = 0
