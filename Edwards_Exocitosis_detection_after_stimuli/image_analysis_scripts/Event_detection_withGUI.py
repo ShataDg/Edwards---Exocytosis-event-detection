@@ -10,8 +10,7 @@ from ij.plugin.frame import RoiManager
 
 from fiji.plugin.trackmate import Model, Settings, TrackMate, SelectionModel, Logger, Spot, SpotCollection
 from fiji.plugin.trackmate.detection import LogDetectorFactory
-from fiji.plugin.trackmate.tracking.sparselap import SimpleSparseLAPTrackerFactory
-from fiji.plugin.trackmate.tracking import LAPUtils
+from fiji.plugin.trackmate.tracking.jaqaman import SparseLAPTrackerFactory
 from fiji.plugin.trackmate.action import ExportAllSpotsStatsAction
 from fiji.plugin.trackmate.action import LabelImgExporter
 from fiji.plugin.trackmate.gui.displaysettings import DisplaySettingsIO
@@ -19,6 +18,7 @@ import fiji.plugin.trackmate.visualization.hyperstack.HyperStackDisplayer as Hyp
 from fiji.plugin.trackmate.providers import SpotAnalyzerProvider
 from fiji.plugin.trackmate.providers import EdgeAnalyzerProvider
 from fiji.plugin.trackmate.providers import TrackAnalyzerProvider
+from fiji.plugin.trackmate.action.LabelImgExporter.LabelIdPainting import LABEL_IS_INDEX
 
 
 dc=DirectoryChooser("Choose a folder")
@@ -113,8 +113,8 @@ for eachobj in movies:
 			'DO_MEDIAN_FILTERING' : False,
 			}
 	
-		settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-		settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+		settings.trackerFactory = SparseLAPTrackerFactory()
+		settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 		settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 		settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 		settings.trackerSettings['MAX_FRAME_GAP'] = 0
@@ -132,7 +132,7 @@ for eachobj in movies:
 	
 		exportSpotsAsDots = False
 		exportTracksOnly = True
-		lblImg = LabelImgExporter.createLabelImagePlus( trackmate, exportSpotsAsDots, exportTracksOnly, False )
+		lblImg = LabelImgExporter.createLabelImagePlus(trackmate, exportSpotsAsDots, exportTracksOnly, LABEL_IS_INDEX)
 		lblImg.show()
 		IJ.selectWindow('LblImg_img_for_TM');
 		IJ.saveAs("Tiff",os.path.join(output_dir,name+'_lblImg_NH3.tif'));
@@ -221,8 +221,8 @@ for eachobj in movies:
 				'DO_MEDIAN_FILTERING' : False,
 				}
 		
-			settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-			settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+			settings.trackerFactory = SparseLAPTrackerFactory()
+			settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 			settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 			settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 			settings.trackerSettings['MAX_FRAME_GAP'] = 0
@@ -240,7 +240,7 @@ for eachobj in movies:
 			
 			exportSpotsAsDots = False
 			exportTracksOnly = True
-			lblImg = LabelImgExporter.createLabelImagePlus( trackmate, exportSpotsAsDots, exportTracksOnly, False )
+			lblImg = LabelImgExporter.createLabelImagePlus(trackmate, exportSpotsAsDots, exportTracksOnly, LABEL_IS_INDEX)
 			lblImg.show()
 			IJ.selectWindow('LblImg_img'+str(i));
 			IJ.saveAs("Tiff",os.path.join(output_dir,name+'_lblImg_img'+str(l)+'.tif'));
@@ -315,8 +315,8 @@ for eachobj in movies:
 			'DO_MEDIAN_FILTERING' : False,
 			}
 	
-		settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-		settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+		settings.trackerFactory = SparseLAPTrackerFactory()
+		settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 		settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 		settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 		settings.trackerSettings['MAX_FRAME_GAP'] = 0
@@ -334,7 +334,7 @@ for eachobj in movies:
 		
 		exportSpotsAsDots = False
 		exportTracksOnly = True
-		lblImg = LabelImgExporter.createLabelImagePlus( trackmate, exportSpotsAsDots, exportTracksOnly, False )
+		lblImg = LabelImgExporter.createLabelImagePlus(trackmate, exportSpotsAsDots, exportTracksOnly, LABEL_IS_INDEX)
 		lblImg.show()
 		IJ.selectWindow('LblImg_img_for_TM');
 		IJ.saveAs("Tiff",os.path.join(output_dir,name+'_lblImg_whole.tif'));
@@ -379,5 +379,5 @@ for eachobj in movies:
 		IJ.selectWindow(name+'_whole.csv');
 		IJ.run ("Close");
 		IJ.run("Close All");
-	
-			
+
+
