@@ -10,8 +10,7 @@ from ij.plugin.frame import RoiManager
 
 from fiji.plugin.trackmate import Model, Settings, TrackMate, SelectionModel, Logger, Spot, SpotCollection
 from fiji.plugin.trackmate.detection import LogDetectorFactory
-from fiji.plugin.trackmate.tracking.sparselap import SimpleSparseLAPTrackerFactory
-from fiji.plugin.trackmate.tracking import LAPUtils
+from fiji.plugin.trackmate.tracking.jaqaman import SparseLAPTrackerFactory
 from fiji.plugin.trackmate.action import ExportAllSpotsStatsAction, LabelImgExporter, CaptureOverlayAction
 from fiji.plugin.trackmate.gui.displaysettings import DisplaySettings, DisplaySettingsIO
 import fiji.plugin.trackmate.visualization.hyperstack.HyperStackDisplayer as HyperStackDisplayer
@@ -112,8 +111,7 @@ for eachobj in movies:
 			'DO_MEDIAN_FILTERING' : False,
 			}
 	
-		settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-		settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+		settings.trackerFactory = SparseLAPTrackerFactory()
 		settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 		settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 		settings.trackerSettings['MAX_FRAME_GAP'] = 0
@@ -231,8 +229,7 @@ for eachobj in movies:
 				'DO_MEDIAN_FILTERING' : False,
 				}
 		
-			settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-			settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+			settings.trackerFactory = SparseLAPTrackerFactory()
 			settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 			settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 			settings.trackerSettings['MAX_FRAME_GAP'] = 0
@@ -321,7 +318,7 @@ for eachobj in movies:
 			'DO_MEDIAN_FILTERING' : False,
 			}
 	
-		settings.trackerFactory = SimpleSparseLAPTrackerFactory()
+		settings.trackerFactory = SparseLAPTrackerFactory()
 		settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
 		settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 		settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)

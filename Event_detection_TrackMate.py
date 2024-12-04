@@ -9,8 +9,7 @@ from ij.plugin.frame import RoiManager
 
 from fiji.plugin.trackmate import Model, Settings, TrackMate, SelectionModel, Logger, Spot, SpotCollection
 from fiji.plugin.trackmate.detection import LogDetectorFactory
-from fiji.plugin.trackmate.tracking.sparselap import SimpleSparseLAPTrackerFactory
-from fiji.plugin.trackmate.tracking import LAPUtils
+from fiji.plugin.trackmate.tracking.jaqaman import SparseLAPTrackerFactory
 from fiji.plugin.trackmate.action import ExportAllSpotsStatsAction
 from fiji.plugin.trackmate.action import LabelImgExporter
 from fiji.plugin.trackmate.gui.displaysettings import DisplaySettingsIO
@@ -20,14 +19,13 @@ from fiji.plugin.trackmate.providers import EdgeAnalyzerProvider
 from fiji.plugin.trackmate.providers import TrackAnalyzerProvider
 
 
-
-input_dir = '/Users/bdiazroh/Desktop/Projects/COBAProjects/EdwardsLab/Analysis/'  #folder were all time-lapse images are saved
-output_dir = '/Users/bdiazroh/Desktop/Projects/COBAProjects/EdwardsLab/Analysis/' #folder were files created will be saved
+input_dir = '/Volumes/BAGGINS/TRD2_test/input'  #folder where all time-lapse images are saved
+output_dir = '/Volumes/BAGGINS/TRD2_test/output' #folder were files created will be saved
 
 #settings for image processing to improve signal/noise ratio
 file_type = ".tif" #file type if using .tif files already comment out lanes 53 and 54 and uncomment lanes 56 and 57
-frames = 16000  #length of time-lapse movie
-step_size = 2000  #step-size is used to remove backgroud fluoresence should be 2-3 times the duration of the longest event 
+frames = 100  #length of time-lapse movie
+step_size = 20  #step-size is used to remove backgroud fluoresence should be 2-3 times the duration of the longest event 
 
 #settings for TrackMate for event detection 
 diameter = 0.5  #average diameter of the event in microns
@@ -36,7 +34,7 @@ threshold = 10  #threshold for the event detection larger values will result in 
 channel = 1 #trackmate can work on images with more then one channel if that is the case select the channel were the events are being detected
 link_distance = 2 #this set the distance that an event can whitin a frame for static events this value should be set close to 0
 gap_distance = 2 #this set the distance that an event can move from frame to frame, for static events this value should be set close to 0
-gap_frame = 100 #number of frames that can have no event detected between two event and still be considered the same event 
+gap_frame = 10 #number of frames that can have no event detected between two event and still be considered the same event 
 
 ic =  ImageCalculator();
 reload(sys)
@@ -108,8 +106,7 @@ for eachobj in movies:
 			'DO_MEDIAN_FILTERING' : False,
 			}
 		
-		settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-		settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+		settings.trackerFactory = SparseLAPTrackerFactory()
 		settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 		settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 		settings.trackerSettings['MAX_FRAME_GAP'] = int(gap_frame)
