@@ -17,10 +17,11 @@ import fiji.plugin.trackmate.visualization.hyperstack.HyperStackDisplayer as Hyp
 from fiji.plugin.trackmate.providers import SpotAnalyzerProvider
 from fiji.plugin.trackmate.providers import EdgeAnalyzerProvider
 from fiji.plugin.trackmate.providers import TrackAnalyzerProvider
+from fiji.plugin.trackmate.action.LabelImgExporter.LabelIdPainting import LABEL_IS_INDEX
 
 
-input_dir = '/Volumes/BAGGINS/TRD2_test/input'  #folder where all time-lapse images are saved
-output_dir = '/Volumes/BAGGINS/TRD2_test/output' #folder were files created will be saved
+input_dir = '/Volumes/BAGGINS/TRD2_test/protocol_1/input'  #folder where all time-lapse images are saved
+output_dir = '/Volumes/BAGGINS/TRD2_test/protocol_1/output' #folder were files created will be saved
 
 #settings for image processing to improve signal/noise ratio
 file_type = ".tif" #file type if using .tif files already comment out lanes 53 and 54 and uncomment lanes 56 and 57
@@ -60,7 +61,7 @@ for eachobj in movies:
 		for i in range (1, steps+1):
 			j = ((i-1)*step_size)+1
 			k = i * step_size
-			IJ.selectWindow(str(name)+".tif"); 
+			IJ.selectWindow(str(name)+".tif");
 			IJ.run("Make Substack...", "slices=" + str(j)+ "-"+str(k));
 			IJ.run("Z Project...", "projection=Median");
 			img1= WindowManager.getImage("Substack ("+ str(j)+ "-"+str(k)+")");
@@ -90,7 +91,7 @@ for eachobj in movies:
 		IJ.run("Properties...", "channels=1 slices=1 frames=" +str(frames));
 		imp = WindowManager.getCurrentImage();
 		imp.setTitle(name+'_for_TM');
-		IJ.selectWindow('Results'); 
+		IJ.selectWindow('Results');
 		IJ.run ("Close");
 		
 		model = Model()
@@ -107,6 +108,7 @@ for eachobj in movies:
 			}
 		
 		settings.trackerFactory = SparseLAPTrackerFactory()
+		settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 		settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 		settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 		settings.trackerSettings['MAX_FRAME_GAP'] = int(gap_frame)
@@ -124,7 +126,7 @@ for eachobj in movies:
 		
 		exportSpotsAsDots = True
 		exportTracksOnly = True
-		lblImg = LabelImgExporter.createLabelImagePlus(trackmate, exportSpotsAsDots, exportTracksOnly)
+		lblImg = LabelImgExporter.createLabelImagePlus(trackmate, exportSpotsAsDots, exportTracksOnly, LABEL_IS_INDEX)
 		lblImg.show()
 		IJ.saveAs("Tiff",os.path.join(output_dir,name+'_lblImg.tif'));
 		IJ.run ("Close");
@@ -150,7 +152,7 @@ for eachobj in movies:
 			track = model.getTrackModel().trackSpots(id)
 		
 			for spot in track:
-				sid = spot.ID() 
+				sid = spot.ID()
 				x=spot.getFeature('POSITION_X')
 				y=spot.getFeature('POSITION_Y')
 				t=spot.getFeature('FRAME')
@@ -165,14 +167,14 @@ for eachobj in movies:
 				table.addValue("POSITION_Y", y)
 				table.addValue("FRAME", t)
 				table.addValue("QUALITY", q)
-		table.show("TrackMate Results") 
+		table.show("TrackMate Results")
 		IJ.selectWindow('TrackMate Results');
 		IJ.saveAs("Measurements",os.path.join(output_dir,name+'.csv'));
-		IJ.selectWindow(name+'.tif'); 
+		IJ.selectWindow(name+'.tif');
 		IJ.run ("Close");
-		IJ.selectWindow(name+'_for_TM'); 
+		IJ.selectWindow(name+'_for_TM');
 		IJ.run ("Close");
-		IJ.selectWindow(name+'.csv'); 
+		IJ.selectWindow(name+'.csv');
 		IJ.run ("Close");
 		
 IJ.run("Close All")
