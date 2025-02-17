@@ -7,16 +7,16 @@ from ij.gui import WaitForUserDialog, GenericDialog
 from ij.plugin import ImageCalculator, PlugIn
 from ij.measure import Measurements, ResultsTable
 from ij.plugin.frame import RoiManager
+from ij.text import TextWindow
 
 from fiji.plugin.trackmate import Model, Settings, TrackMate, SelectionModel, Logger, Spot, SpotCollection
 from fiji.plugin.trackmate.detection import LogDetectorFactory
-from fiji.plugin.trackmate.tracking.sparselap import SimpleSparseLAPTrackerFactory
-from fiji.plugin.trackmate.tracking import LAPUtils
+from fiji.plugin.trackmate.tracking.jaqaman import SparseLAPTrackerFactory
 from fiji.plugin.trackmate.action import ExportAllSpotsStatsAction, LabelImgExporter, CaptureOverlayAction
 from fiji.plugin.trackmate.gui.displaysettings import DisplaySettings, DisplaySettingsIO
 import fiji.plugin.trackmate.visualization.hyperstack.HyperStackDisplayer as HyperStackDisplayer
 from fiji.plugin.trackmate.providers import SpotAnalyzerProvider, EdgeAnalyzerProvider, TrackAnalyzerProvider
-
+from fiji.plugin.trackmate.action.LabelImgExporter.LabelIdPainting import LABEL_IS_INDEX
 
 dc=DirectoryChooser("Choose a folder")
 input_dir=dc.getDirectory() #folder were all time-lapse images are saved
@@ -60,8 +60,8 @@ else:
     
 
 ic =  ImageCalculator();
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 
 #Process each movie and return a label image with each event as a spot numbered based on the trackId as well as a .csv table with x,y and frame position for each event and the track it belongs too
@@ -112,8 +112,8 @@ for eachobj in movies:
 			'DO_MEDIAN_FILTERING' : False,
 			}
 	
-		settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-		settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+		settings.trackerFactory = SparseLAPTrackerFactory()
+		settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 		settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 		settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 		settings.trackerSettings['MAX_FRAME_GAP'] = 0
@@ -131,7 +131,7 @@ for eachobj in movies:
 	
 		exportSpotsAsDots = False
 		exportTracksOnly = True
-		lblImg = LabelImgExporter.createLabelImagePlus( trackmate, exportSpotsAsDots, exportTracksOnly, False )
+		lblImg = LabelImgExporter.createLabelImagePlus(trackmate, exportSpotsAsDots, exportTracksOnly, LABEL_IS_INDEX)
 		lblImg.show()
 		IJ.selectWindow('LblImg_img_for_TM');
 		IJ.saveAs("Tiff",os.path.join(output_dir,name+'_NH3_lblImg.tif'));
@@ -146,7 +146,7 @@ for eachobj in movies:
 			table= ResultsTable()
 		else:
 			table = rt_exist.getTextPanel().getOrCreateResultsTable()
-		table.reset
+		table.reset()
 	
 		for id in model.getTrackModel().trackIDs(True):
 			v = fm.getTrackFeature(id, 'TRACK_MEAN_SPEED')
@@ -179,7 +179,7 @@ for eachobj in movies:
 		IJ.selectWindow(name+'_lblImg_NH3.tif');
 		IJ.run("Make Substack...", "slices=1-"+str(l));
 		IJ.run("Multiply...", "value=10 stack");
-		IJ.run("Manual Threshold...", "min=0 max=1");
+		IJ.run("Manual Threshold", "min=0 max=1");
 		IJ.run("Make Binary", "method=Default background=Default");
 		IJ.run("Outline", "stack");
 		IJ.run("16-bit", "");
@@ -231,8 +231,8 @@ for eachobj in movies:
 				'DO_MEDIAN_FILTERING' : False,
 				}
 		
-			settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-			settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+			settings.trackerFactory = SparseLAPTrackerFactory()
+			settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 			settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 			settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 			settings.trackerSettings['MAX_FRAME_GAP'] = 0
@@ -321,8 +321,8 @@ for eachobj in movies:
 			'DO_MEDIAN_FILTERING' : False,
 			}
 	
-		settings.trackerFactory = SimpleSparseLAPTrackerFactory()
-		settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+		settings.trackerFactory = SparseLAPTrackerFactory()
+		settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 		settings.trackerSettings['LINKING_MAX_DISTANCE'] = float(link_distance)
 		settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = float(gap_distance)
 		settings.trackerSettings['MAX_FRAME_GAP'] = 0
@@ -340,7 +340,7 @@ for eachobj in movies:
 		
 		exportSpotsAsDots = False
 		exportTracksOnly = True
-		lblImg = LabelImgExporter.createLabelImagePlus( trackmate, exportSpotsAsDots, exportTracksOnly, False)
+		lblImg = LabelImgExporter.createLabelImagePlus( trackmate, exportSpotsAsDots, exportTracksOnly, LABEL_IS_INDEX)
 		lblImg.setTitle("EventsLabel")
 		lblImg.show()
 		lblImg.show()
@@ -390,7 +390,7 @@ for eachobj in movies:
 		IJ.selectWindow(name+'_lblImg.tif');
 		IJ.run("Make Substack...", "slices=1-"+str(l));
 		IJ.run("Multiply...", "value=10 stack");
-		IJ.run("Manual Threshold...", "min=0 max=1");
+		IJ.run("Manual Threshold", "min=0 max=1");
 		IJ.run("Make Binary", "method=Default background=Default");
 		IJ.run("Outline", "stack");
 		IJ.run("16-bit", "");
